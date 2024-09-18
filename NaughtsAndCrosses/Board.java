@@ -4,6 +4,8 @@ public class Board {
 
   private Marker[][] currentState;
   private int boardSize;
+  private int lastMoveRow;
+  private int lastMoveCol;
 
   public Board(int boardSize) {
     this.boardSize = boardSize;
@@ -14,6 +16,14 @@ public class Board {
         currentState[i][j] = Marker.EMPTY;
       }
     }
+  }
+
+  public int getBoardSize() {
+    return boardSize;
+  }
+
+  public Marker[][] getCurrentState() {
+    return currentState;
   }
 
   public boolean placeMarker(int position, Marker marker) {
@@ -29,8 +39,41 @@ public class Board {
     }
 
     currentState[row][col] = marker;
+    lastMoveRow = row;
+    lastMoveCol = col;
     return true;
+  }
 
+  public boolean checkWinner(Player player) {
+    Marker playerMarker = player.getMarker();
+    return (checkDirection(lastMoveRow, lastMoveCol, 0, 1, playerMarker) ||
+        checkDirection(lastMoveRow, lastMoveCol, 1, 0, playerMarker) ||
+        checkDirection(lastMoveRow, lastMoveCol, 1, 1, playerMarker) ||
+        checkDirection(lastMoveRow, lastMoveCol, 1, -1, playerMarker));
+  }
+
+  private boolean checkDirection(int row, int col, int rowIncrement, int colIncrement, Marker marker) {
+    int consecutiveCount = 1;
+    consecutiveCount += countMarkersInDirection(row, col, rowIncrement, colIncrement, marker);
+    consecutiveCount += countMarkersInDirection(row, col, -rowIncrement, -colIncrement, marker);
+    return consecutiveCount >= boardSize;
+  }
+
+  private int countMarkersInDirection(int row, int col, int rowIncrement, int colIncrement, Marker marker) {
+    int count = 0;
+    for (int i = 1; i < boardSize; i++) {
+      int newRow = row + i * rowIncrement;
+      int newCol = col + i * colIncrement;
+      if (newRow < 0 || newRow >= boardSize || newCol < 0 || newCol >= boardSize) {
+        break;
+      }
+      if (currentState[newRow][newCol] == marker) {
+        count++;
+      } else {
+        break;
+      }
+    }
+    return count;
   }
 
   public void printBoard() {
@@ -46,5 +89,11 @@ public class Board {
       }
     }
     System.out.println();
+  }
+
+  public boolean isPositionEmpty(int position) {
+    int row = position / boardSize;
+    int col = position % boardSize;
+    return currentState[row][col] == Marker.EMPTY;
   }
 }
