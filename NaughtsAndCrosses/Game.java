@@ -23,8 +23,18 @@ public class Game {
       System.out.printf("Computer controlled player '%s' is making a move... \n", player.getMarker());
       return player.getComputerChoice(board);
     }
-    System.out.printf("Player '%s', please choose position to place your marker in (1-%d) \n", player.getMarker(), board.getBoardSize() * board.getBoardSize());
-    return scanner.nextInt() - 1;
+    System.out.printf("Player '%s', please choose column and row to place your marker in (example : A1) \n", player.getMarker());
+
+    String userInput = scanner.nextLine();
+    char columnChar = userInput.charAt(0);
+    int rowNumber = Integer.parseInt(userInput.substring(1));
+
+    int column = columnChar - 'A';
+    int row = rowNumber - 1;
+
+    int position = row * board.getBoardSize() + column;
+
+    return position;
   }
 
   private void processPlayerChoice(int playerChoice, Player player) {
@@ -43,7 +53,7 @@ public class Game {
   public void start() {
 
 //    gameSetup();
-    board = new Board(3);
+    board = new Board(5);
 
     boolean running = true;
 

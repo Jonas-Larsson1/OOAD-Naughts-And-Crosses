@@ -22,10 +22,6 @@ public class Board {
     return boardSize;
   }
 
-  public Marker[][] getCurrentState() {
-    return currentState;
-  }
-
   public boolean placeMarker(int position, Marker marker) {
     if (position < 0 || position >= boardSize * boardSize) {
       return false;
@@ -33,6 +29,19 @@ public class Board {
 
     int row = position / boardSize;
     int col = position % boardSize;
+
+    if (currentState[row][col] != Marker.EMPTY) {
+      return false;
+    }
+
+    currentState[row][col] = marker;
+    lastMoveRow = row;
+    lastMoveCol = col;
+    return true;
+  }
+
+  public boolean placeMarker(char column, int row, Marker marker) {
+    int col = column - 'A' + 1;
 
     if (currentState[row][col] != Marker.EMPTY) {
       return false;
@@ -76,7 +85,7 @@ public class Board {
     return count;
   }
 
-  public void printBoard() {
+/*  public void printBoard() {
     for (int row = 0; row < boardSize; row++) {
       for (int col = 0; col < boardSize; col++) {
         System.out.print(" " + currentState[row][col] + " ");
@@ -85,7 +94,48 @@ public class Board {
         }
       }
       if (row < boardSize - 1) {
-        System.out.println("\n---+---+---");
+        System.out.println();
+        for (int col = 0; col < boardSize; col++) {
+          System.out.print("---");
+          if (col < boardSize - 1) {
+            System.out.print("+");
+          }
+        }
+        System.out.println();
+//        System.out.println("\n---+---+---");
+      }
+    }
+    System.out.println();
+  }*/
+
+  public void printBoard() {
+    System.out.print("   ");
+    for (int col = 0; col < boardSize; col++) {
+      char columnLabel = (char) ('A' + col);
+      System.out.print(" " + columnLabel + "  ");
+    }
+    System.out.println();
+
+    for (int row = 0; row < boardSize; row++) {
+      System.out.printf("%2d ", row + 1);
+
+      for (int col = 0; col < boardSize; col++) {
+        System.out.print(" " + currentState[row][col] + " ");
+        if (col < boardSize - 1) {
+          System.out.print("|");
+        }
+      }
+
+      if (row < boardSize - 1) {
+        System.out.println();
+        System.out.print("   ");
+        for (int col = 0; col < boardSize; col++) {
+          System.out.print("---");
+          if (col < boardSize - 1) {
+            System.out.print("+");
+          }
+        }
+        System.out.println();
       }
     }
     System.out.println();
