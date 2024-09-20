@@ -109,6 +109,7 @@ public class Board {
   }*/
 
   public void printBoard() {
+    System.out.println();
     System.out.print("   ");
     for (int col = 0; col < boardSize; col++) {
       char columnLabel = (char) ('A' + col);

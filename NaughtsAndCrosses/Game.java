@@ -23,7 +23,7 @@ public class Game {
       System.out.printf("Computer controlled player '%s' is making a move... \n", player.getMarker());
       return player.getComputerChoice(board);
     }
-    System.out.printf("Player '%s', please choose column and row to place your marker in (example : A1) \n", player.getMarker());
+    System.out.printf("\nPlayer '%s', please choose column and row to place your marker in (example : A1) \n", player.getMarker());
 
     String userInput = scanner.nextLine();
     char columnChar = userInput.charAt(0);
@@ -67,13 +67,15 @@ public class Game {
 
     int currentRound = 0;
 
-    board.printBoard();
+//    board.printBoard();
 
     while (running) {
       Player currentPlayer = players.get(currentPlayerIndex);
+      if (!currentPlayer.isComputerControlled()) {
+        board.printBoard();
+      }
       int playerChoice = getPlayerChoice(currentPlayer);
       processPlayerChoice(playerChoice, currentPlayer);
-      board.printBoard();
       if (board.checkWinner(currentPlayer)) {
         System.out.printf("Player '%s' wins!", currentPlayer.getMarker());
         break;
